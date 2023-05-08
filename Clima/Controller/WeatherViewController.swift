@@ -15,15 +15,21 @@ class WeatherViewController: UIViewController {
         super.viewDidLoad()
         
         location.requestWhenInUseAuthorization()
+
+        location.delegate = self
         location.requestLocation()
         
         weatherApi.delegate = self
         userInput.delegate = self
     }
-
+    
     @IBAction func search(_ sender: UIButton) {
         weatherApi.fetchData(name: userInput.text!)
         userInput.endEditing(true)
+    }
+    
+    @IBAction func getCurrentLocation(_ sender: UIButton) {
+        location.requestLocation()
     }
 }
 
@@ -66,3 +72,16 @@ extension WeatherViewController : weatherApiData {
     }
 }
 
+//Mark : LocationManager
+
+extension WeatherViewController : CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last {
+            weatherApi.fetchData(lat: location.coordinate.latitude, lon: location.coordinate.longitude)
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error)
+    }
+}

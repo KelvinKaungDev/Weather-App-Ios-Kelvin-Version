@@ -10,7 +10,15 @@ struct WeatherApi {
     
     func fetchData(name : String) {
         var key = "https://api.openweathermap.org/data/2.5/weather?q=\(name)&appid=b6af36398d3c9dd99142e3078377c053&units=metric"
-        
+        getData(key: key)
+    }
+    
+    func fetchData(lat : Double, lon : Double) {
+        var key = "https://api.openweathermap.org/data/2.5/weather?lat=\(lat)&lon=\(lon)&appid=b6af36398d3c9dd99142e3078377c053&units=metric"
+        getData(key: key)
+    }
+    
+    func getData(key : String) {
         if let url = URL(string: key) {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { data, response, error in
